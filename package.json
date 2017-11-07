@@ -1,6 +1,6 @@
 {
-  "name": "hello_world",
-  "version": "0.0.0",
+  "name": "ngraph.native",
+  "version": "0.1.0",
   "description": "Node.js Addons Example #1",
   "main": "ngraph.native.js",
   "private": true,
