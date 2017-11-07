@@ -1,10 +1,3 @@
-var addon = require('bindings')('hello');
+var addon = require('bindings')('force-layout');
 
-console.log(addon.add(3, 4, Int32Array.from([10, 2]))); // 'world'
-
-
-function test(points, iterations) {
-  const bodies = Int32Array.from([1, 2]);
-  const edges = Int32Array.from([1, 2]);
-  return 0;
-}
+console.log(addon.runLayout(Int32Array.from([2, 1]), Int32Array.from([1, 2, 2, 1]))); // 'world'

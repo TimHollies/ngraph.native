@@ -27,15 +27,14 @@ class Layout {
   void updateDragForce(Body *body);
   void updateSpringForce(Body *spring);
 
-  void initBodies(int *links, long size);
+  void initBodies(int* bodyIds, size_t bodyIdSize, int *links, long size);
 
   void setDefaultBodiesPositions();
   void loadPositionsFromArray(int *initialPositions);
   
 public:
   Layout();
-  void init(int *links, long linksSize, int *initialPositions, size_t posSize);
-  void init(int *links, long size);
+  void init(int* bodyIds, size_t bodyIdSize, int *links, long size);
   void setBodiesWeight(int *weights);
   bool step();
   size_t getBodiesCount();

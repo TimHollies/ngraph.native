@@ -46,6 +46,7 @@ struct Vector2 {
 };
 
 struct Body {
+  int label;
   Vector2 pos;
   Vector2 prevPos;
   Vector2 force;
@@ -57,8 +58,8 @@ struct Body {
   // so we can count its mass appropriately.
   int incomingCount = 0;
 
-  Body() { }
-  Body(Vector2 _pos): pos(_pos), prevPos(_pos) {}
+  Body(int _label): label(_label)  { }
+  Body(int _label, Vector2 _pos): label(_label),  pos(_pos), prevPos(_pos) {}
 
   void setPos(const Vector2 &_pos) {
     pos = _pos;

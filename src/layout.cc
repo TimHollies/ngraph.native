@@ -13,26 +13,13 @@
 
 Layout::Layout() :tree(settings) {}
 
-void Layout::init(int* links, long size) {
+void Layout::init(int* bodyIds, size_t bodyIdSize, int* links, long size) {
   random = Random(42);
-  initBodies(links, size);
+  initBodies(bodyIds, bodyIdSize, links, size);
 
   // Now the graph is initialized. Let's make sure we get
   // good initial positions:
   setDefaultBodiesPositions();
-}
-
-void Layout::init(int *links, long linksSize, int *initialPositions, size_t posSize) {
-  initBodies(links, linksSize);
-  if (bodies.size() * 3 != posSize) {
-    cout << "There are " << bodies.size() << " nodes in the graph and " << endl
-    << posSize << " positions. It is expected that each body has exactly" << endl
-    << "3 Int32 records in the positions file (x, y, z). However this is not the case" << endl
-    << "here. Are you sure you are loading correct positions for this graph file?";
-    throw "Positions file mismatch";
-  }
-
-  loadPositionsFromArray(initialPositions);
 }
 
 void Layout::loadPositionsFromArray(int *initialPositions) {
@@ -67,49 +54,44 @@ void Layout::setDefaultBodiesPositions() {
   }
 }
 
-void Layout::initBodies(int* links, long size) {
-  // FIXME: If there are no links in a graph, it will fail
-  int from = 0;
-  int maxBodyId = 0;
+void Layout::initBodies(int* bodyIds, size_t bodyIdSize, int* links, long size) {
+  // // FIXME: If there are no links in a graph, it will fail
+  // int from = 0;
+  // int maxBodyId = 0;
 
-  // since we can have holes in the original list - let's
-  // figure out max node id, and then initialize bodies
-  for (int i = 0; i < size; i++) {
-    int index = *(links + i);
+  // // since we can have holes in the original list - let's
+  // // figure out max node id, and then initialize bodies
+  // for (int i = 0; i < size; i++) {
+  //   int index = *(links + i);
 
-    if (index < 0) {
-      index = -index;
-      from = index - 1;
-      if (from > maxBodyId) maxBodyId = from;
-    } else {
-      int to = index - 1;
-      if (to > maxBodyId) maxBodyId = to;
-    }
-  }
+  //   if (index < 0) {
+  //     index = -index;
+  //     from = index - 1;
+  //     if (from > maxBodyId) maxBodyId = from;
+  //   } else {
+  //     int to = index - 1;
+  //     if (to > maxBodyId) maxBodyId = to;
+  //   }
+  // }
 
-  bodies.reserve(maxBodyId + 1);
-  for (int i = 0; i < maxBodyId + 1; ++i) {
-    bodies.push_back(Body());
+  std::map<int, size_t> bodyMap;
+
+  bodies.reserve(bodyIdSize);
+  for (int i = 0; i < bodyIdSize; i++) {
+    bodies.push_back(Body(bodyIds[i]));
+    bodyMap[bodyIds[i]] = i;
   }
 
   // Now that we have bodies, let's add links:
-  Body *fromBody = nullptr;
-  for (int i = 0; i < size; i++) {
-    int index = *(links + i);
-    if (index < 0) {
-      index = -index;
-      from = index - 1;
-      fromBody = &(bodies[from]);
-    } else {
-      int to = index - 1;
-      fromBody->springs.push_back(to);
-      bodies[to].incomingCount += 1;
-    }
+  for (int i = 0; i < size; i+=2) {
+    bodies[bodyMap.at(links[i])].springs.push_back(bodyMap.at(links[i+1]));
+    bodies[bodyMap.at(links[i+1])].incomingCount += 1;
   }
 
   // Finally, update body mass based on total number of neighbours:
   for (size_t i = 0; i < bodies.size(); i++) {
     Body *body = &(bodies[i]);
+    // TODO: Dividing by 2 rather than 3 due to changing to 2d only?
     body->mass = 1 + (body->springs.size() + body->incomingCount)/3.0;
   }
 }
@@ -131,7 +113,7 @@ size_t Layout::getBodiesCount() {
 bool Layout::step() {
   accumulate();
   double totalMovement = integrate();
-  cout << totalMovement << " move" << endl;
+  // cout << totalMovement << " move" << endl;
   return totalMovement < settings.stableThreshold;
 }
 
