@@ -37,9 +37,8 @@ void Layout::init(int *links, long linksSize, int *initialPositions, size_t posS
 
 void Layout::loadPositionsFromArray(int *initialPositions) {
   for (size_t i = 0; i < bodies.size(); ++i) {
-    Vector3 initialPos(initialPositions[i * 3 + 0], //+ Random::nextDouble(),
-                       initialPositions[i * 3 + 1], //+ Random::nextDouble(),
-                       initialPositions[i * 3 + 2] //+ Random::nextDouble()
+    Vector2 initialPos(initialPositions[i * 3 + 0], //+ Random::nextDouble(),
+                       initialPositions[i * 3 + 1] //+ Random::nextDouble(),
                        );
     bodies[i].setPos(initialPos);
   }
@@ -50,19 +49,17 @@ void Layout::setDefaultBodiesPositions() {
   for (size_t i = 0; i < maxBodyId; ++i) {
     Body *body = &(bodies[i]);
     if (!body->positionInitialized()) {
-      Vector3 initialPos(random.nextDouble() * log(maxBodyId) * 100,
-                         random.nextDouble() * log(maxBodyId) * 100,
+      Vector2 initialPos(random.nextDouble() * log(maxBodyId) * 100,
                          random.nextDouble() * log(maxBodyId) * 100);
       bodies[i].setPos(initialPos);
     }
-    Vector3 *sourcePos = &(body->pos);
+    Vector2 *sourcePos = &(body->pos);
     // init neighbours position:
     for (size_t j = 0; j < body->springs.size(); ++j) {
       if (!bodies[body->springs[j]].positionInitialized()) {
-        Vector3 neighbourPosition(
+        Vector2 neighbourPosition(
                                   sourcePos->x + random.next(settings.springLength) - settings.springLength/2,
-                                  sourcePos->y + random.next(settings.springLength) - settings.springLength/2,
-                                  sourcePos->z + random.next(settings.springLength) - settings.springLength/2
+                                  sourcePos->y + random.next(settings.springLength) - settings.springLength/2
                                   );
         bodies[j].setPos(neighbourPosition);
       }
@@ -160,49 +157,42 @@ void Layout::accumulate() {
 double Layout::integrate() {
   double dx = 0, tx = 0,
   dy = 0, ty = 0,
-  dz = 0, tz = 0,
   timeStep = settings.timeStep;
 
 //dx should be private or defined inside loop
  //tx need to be reduction variable, or its value will be unpredictable.
-  #pragma omp parallel for reduction(+:tx,ty,tz) private(dx,dy,dz)
+  #pragma omp parallel for reduction(+:tx,ty) private(dx,dy)
   for (size_t i = 0; i < bodies.size(); i++) {
     Body* body = &bodies[i];
     double coeff = timeStep / body->mass;
 
     body->velocity.x += coeff * body->force.x;
     body->velocity.y += coeff * body->force.y;
-    body->velocity.z += coeff * body->force.z;
 
     double vx = body->velocity.x,
     vy = body->velocity.y,
-    vz = body->velocity.z,
-    v = sqrt(vx * vx + vy * vy + vz * vz);
+    v = sqrt(vx * vx + vy * vy);
 
     if (v > 1) {
       body->velocity.x = vx / v;
       body->velocity.y = vy / v;
-      body->velocity.z = vz / v;
     }
 
     dx = timeStep * body->velocity.x;
     dy = timeStep * body->velocity.y;
-    dz = timeStep * body->velocity.z;
 
     body->pos.x += dx;
     body->pos.y += dy;
-    body->pos.z += dz;
 
-    tx += abs(dx); ty += abs(dy); tz += abs(dz);
+    tx += abs(dx); ty += abs(dy);
   }
 
-  return (tx * tx + ty * ty + tz * tz)/bodies.size();
+  return (tx * tx + ty * ty)/bodies.size();
 }
 
 void Layout::updateDragForce(Body *body) {
   body->force.x -= settings.dragCoeff * body->velocity.x;
   body->force.y -= settings.dragCoeff * body->velocity.y;
-  body->force.z -= settings.dragCoeff * body->velocity.z;
 }
 
 void Layout::updateSpringForce(Body *source) {
@@ -213,14 +203,12 @@ void Layout::updateSpringForce(Body *source) {
 
     double dx = body2->pos.x - body1->pos.x;
     double dy = body2->pos.y - body1->pos.y;
-    double dz = body2->pos.z - body1->pos.z;
-    double r = sqrt(dx * dx + dy * dy + dz * dz);
+    double r = sqrt(dx * dx + dy * dy);
 
     if (r == 0) {
       dx = (random.nextDouble() - 0.5) / 50;
       dy = (random.nextDouble() - 0.5) / 50;
-      dz = (random.nextDouble() - 0.5) / 50;
-      r = sqrt(dx * dx + dy * dy + dz * dz);
+      r = sqrt(dx * dx + dy * dy);
     }
 
     double d = r - settings.springLength;
@@ -228,10 +216,8 @@ void Layout::updateSpringForce(Body *source) {
 
     body1->force.x += coeff * dx;
     body1->force.y += coeff * dy;
-    body1->force.z += coeff * dz;
 
     body2->force.x -= coeff * dx;
     body2->force.y -= coeff * dy;
-    body2->force.z -= coeff * dz;
   }
 }

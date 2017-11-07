@@ -17,20 +17,18 @@ struct QuadTreeNode {
   QuadTreeNode *quads[8];
   Body *body;
   double mass;
-  Vector3 massVector;
+  Vector2 massVector;
   double left;
   double right;
   double top;
   double bottom;
-  double front;
-  double back;
  
   void reset() {
     quads[0] = quads[1] = quads[2] = quads[3] = quads[4] = quads[5] = quads[6] = quads[7] = NULL;
     body = NULL;
     massVector.reset();
     mass = 0;
-    left = right = top = bottom = front = back = 0;
+    left = right = top = bottom = 0;
   }
 };
 

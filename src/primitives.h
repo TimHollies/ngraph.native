@@ -23,35 +23,33 @@ struct LayoutSettings {
   double timeStep = 20;
 };
 
-struct Vector3 {
+struct Vector2 {
   double x = 0.0;
   double y = 0.0;
-  double z = 0.0;
 
-  Vector3(double _x, double _y, double _z) :
-  x(_x), y(_y), z(_z) {};
+  Vector2(double _x, double _y) :
+  x(_x), y(_y) {};
 
-  Vector3() {}
+  Vector2() {}
 
   void reset () {
-    x = y = z = 0;
+    x = y = 0;
   }
 
-  bool sameAs(const Vector3 &other) {
+  bool sameAs(const Vector2 &other) {
 
     double dx = std::abs(x - other.x);
     double dy = std::abs(y - other.y);
-    double dz = std::abs(z - other.z);
 
-    return (dx < 1e-8 && dy < 1e-8 && dz < 1e-8);
+    return (dx < 1e-8 && dy < 1e-8);
   }
 };
 
 struct Body {
-  Vector3 pos;
-  Vector3 prevPos;
-  Vector3 force;
-  Vector3 velocity;
+  Vector2 pos;
+  Vector2 prevPos;
+  Vector2 force;
+  Vector2 velocity;
   double mass = 1.0;
 
   vector<int> springs; // these are outgoing connections.
@@ -60,15 +58,15 @@ struct Body {
   int incomingCount = 0;
 
   Body() { }
-  Body(Vector3 _pos): pos(_pos), prevPos(_pos) {}
+  Body(Vector2 _pos): pos(_pos), prevPos(_pos) {}
 
-  void setPos(const Vector3 &_pos) {
+  void setPos(const Vector2 &_pos) {
     pos = _pos;
     prevPos = _pos;
   }
 
   bool positionInitialized() {
-    return pos.x != 0 || pos.y != 0 || pos.z != 0;
+    return pos.x != 0 || pos.y != 0;
   }
 };
 class NotEnoughQuadSpaceException: public exception {};
