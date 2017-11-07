@@ -60,7 +60,7 @@ napi_value RunLayout(napi_env env, napi_callback_info info) {
   void* edgesDataRaw;
   size_t edgesOffset;
   napi_value edgesArraybuffer;
-  status = napi_get_typedarray_info(env, args[0], &edgesTaType, &edgesLength, &edgesDataRaw, &edgesArraybuffer, &edgesOffset);
+  status = napi_get_typedarray_info(env, args[1], &edgesTaType, &edgesLength, &edgesDataRaw, &edgesArraybuffer, &edgesOffset);
   assert(status == napi_ok);
 
   if(nodesTaType != napi_int32_array || edgesTaType != napi_int32_array) {
@@ -90,7 +90,7 @@ napi_value RunLayout(napi_env env, napi_callback_info info) {
   
   int32_t* resultValues = static_cast<int32_t*>(result_data);
 
-  vector<Body>* bodies = graphLayout.getBodies();
+  std::vector<Body>* bodies = graphLayout.getBodies();
 
   for(int i=0; i<nodesLength; i+=1) {
     resultValues[i*3] = nodesData[i];

@@ -1,3 +1,18 @@
 var addon = require('bindings')('force-layout');
 
-console.log(addon.runLayout(Int32Array.from([2, 1]), Int32Array.from([1, 2, 2, 1]))); // 'world'
+const run = (nodes, edges) => {
+  const rawResult = Array.from(addon.runLayout(Int32Array.from(nodes), Int32Array.from(Array.prototype.concat(...edges)))); // 'world'
+
+  const result = [];
+  for(let i=0; i<rawResult.length; i+=3) {
+    result.push({
+      id: "n" + rawResult[i],
+      x: rawResult[i+1],
+      y: rawResult[i+2]
+    })
+  }
+
+  return result;
+}
+
+module.exports = { run };

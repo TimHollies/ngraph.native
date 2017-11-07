@@ -55,24 +55,6 @@ void Layout::setDefaultBodiesPositions() {
 }
 
 void Layout::initBodies(int* bodyIds, size_t bodyIdSize, int* links, long size) {
-  // // FIXME: If there are no links in a graph, it will fail
-  // int from = 0;
-  // int maxBodyId = 0;
-
-  // // since we can have holes in the original list - let's
-  // // figure out max node id, and then initialize bodies
-  // for (int i = 0; i < size; i++) {
-  //   int index = *(links + i);
-
-  //   if (index < 0) {
-  //     index = -index;
-  //     from = index - 1;
-  //     if (from > maxBodyId) maxBodyId = from;
-  //   } else {
-  //     int to = index - 1;
-  //     if (to > maxBodyId) maxBodyId = to;
-  //   }
-  // }
 
   std::map<int, size_t> bodyMap;
 

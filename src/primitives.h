@@ -8,10 +8,9 @@
 
 #ifndef layout___primitives_h
 #define layout___primitives_h
+
 #include <cmath>        // std::abs
 #include <vector>
-
-using namespace std;
 
 struct LayoutSettings {
   double stableThreshold = 0.009;
@@ -53,7 +52,7 @@ struct Body {
   Vector2 velocity;
   double mass = 1.0;
 
-  vector<int> springs; // these are outgoing connections.
+  std::vector<int> springs; // these are outgoing connections.
   // This is just a number of incoming connections for this body,
   // so we can count its mass appropriately.
   int incomingCount = 0;
@@ -70,6 +69,5 @@ struct Body {
     return pos.x != 0 || pos.y != 0;
   }
 };
-class NotEnoughQuadSpaceException: public exception {};
 
 #endif

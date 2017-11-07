@@ -11,8 +11,7 @@
 
 #include "quadTree.h"
 #include <cmath>
-
-NotEnoughQuadSpaceException  _NotEnoughQuadSpaceException;
+#include <algorithm>
 
 QuadTreeNode *QuadTree::createRootNode(std::vector<Body> &bodies) {
   double x1 = INT32_MAX, x2 = INT32_MIN,
@@ -118,7 +117,7 @@ void QuadTree::insert(Body *body, QuadTreeNode *node) {
         // We cannot proceed under current root's constraints, so let's
         // throw - this will cause parent to give bigger space for the root
         // node, and hopefully we can fit on the subsequent iteration.
-        throw _NotEnoughQuadSpaceException;
+        // throw _NotEnoughQuadSpaceException;
       }
     }
     // Next iteration should subdivide node further.
@@ -128,7 +127,7 @@ void QuadTree::insert(Body *body, QuadTreeNode *node) {
 }
 
 void QuadTree::insertBodies(std::vector<Body> &bodies) {
-  try {
+  // try {
     treeNodes.reset();
     root = createRootNode(bodies);
     if (bodies.size() > 0) {
@@ -139,10 +138,10 @@ void QuadTree::insertBodies(std::vector<Body> &bodies) {
       insert(&(bodies[i]), root);
     }
     return;
-  } catch(NotEnoughQuadSpaceException &e) {
+  // } catch(NotEnoughQuadSpaceException &e) {
     // well we tried, but some bodies ended up on the same
     // spot, cannot do anything, but hope that next iteration will fix it
-  }
+  // }
 };
 
 void QuadTree::updateBodyForce(Body *sourceBody) {
