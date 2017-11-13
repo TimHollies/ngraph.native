@@ -5,9 +5,6 @@ const run = (nodes, edges, iterations) => {
   const nodeTArray = Int32Array.from(nodes);
   const edgeTArray = Int32Array.from(Array.prototype.concat(...edges));
 
-  console.log(nodeTArray, edgeTArray)
-
-
   const rawTArrayResult = addon.runLayout(nodeTArray, edgeTArray, iterations); // 'world'
 
   console.log(rawTArrayResult)
