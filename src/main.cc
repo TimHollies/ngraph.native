@@ -9,17 +9,22 @@
 napi_value RunLayout(napi_env env, napi_callback_info info) {
   napi_status status;
 
+   std::cout << "#1" << std::endl;
+
   #pragma region validateInput
 
-  size_t argc = 2;
-  napi_value args[2];
+  size_t argc = 3;
+  napi_value args[3];
   status = napi_get_cb_info(env, info, &argc, args, nullptr, nullptr);
   assert(status == napi_ok);
 
-  if (argc < 2) {
+  if (argc < 3) {
     napi_throw_type_error(env, nullptr, "Wrong number of arguments");
     return nullptr;
   }
+
+  std::cout << "#2" << std::endl;
+
 
   napi_valuetype valuetype0;
   status = napi_typeof(env, args[0], &valuetype0);
@@ -29,10 +34,18 @@ napi_value RunLayout(napi_env env, napi_callback_info info) {
   status = napi_typeof(env, args[1], &valuetype1);
   assert(status == napi_ok);
 
-  if (valuetype0 != napi_object || valuetype1 != napi_object) {
+  napi_valuetype valuetype2;
+  status = napi_typeof(env, args[2], &valuetype2);
+  assert(status == napi_ok);
+
+  std::cout << "#3" << std::endl;
+
+  if (valuetype0 != napi_object || valuetype1 != napi_object || valuetype2 != napi_number) {
     napi_throw_type_error(env, nullptr, "Wrong arguments");
     return nullptr;
   }
+
+  std::cout << "#4" << std::endl;
 
   bool istypedarray0;
   status = napi_is_typedarray(env, args[0], &istypedarray0);
@@ -46,6 +59,8 @@ napi_value RunLayout(napi_env env, napi_callback_info info) {
     napi_throw_type_error(env, nullptr, "Both arguments must be int32array");
     return nullptr;
   }
+
+  std::cout << "#5" << std::endl;
 
   napi_typedarray_type nodesTaType;
   size_t nodesLength;
@@ -68,6 +83,12 @@ napi_value RunLayout(napi_env env, napi_callback_info info) {
     return nullptr;
   }
 
+  std::cout << "#6" << std::endl;
+
+  int iterations;
+  status = napi_get_value_int32(env, args[2], &iterations);
+  assert(status == napi_ok);
+
   #pragma endregion validate input
 
   int32_t* nodesData = static_cast<int32_t*>(nodesDataRaw);
@@ -76,7 +97,8 @@ napi_value RunLayout(napi_env env, napi_callback_info info) {
   Layout graphLayout;
   graphLayout.init(nodesData, nodesLength, edgesData, edgesLength);
 
-  for (int i = 0; i < 10000; ++i) {
+  for (int i = 0; i < iterations; ++i) {
+    std::cout << "Starting iteration " << i << std::endl;
     bool done = graphLayout.step();
     if (done) {
         break;
