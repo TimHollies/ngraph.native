@@ -7,8 +7,6 @@ const run = (nodes, edges, iterations) => {
 
   const rawTArrayResult = addon.runLayout(nodeTArray, edgeTArray, iterations); // 'world'
 
-  console.log(rawTArrayResult)
-
   const rawResult = Array.from(rawTArrayResult);
 
   const result = [];

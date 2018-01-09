@@ -29,3 +29,9 @@ layout++
 *.app
 
 build
+
+# Node
+node_modules
+
+# Dev
+.vscode

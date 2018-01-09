@@ -1,5 +1,7 @@
 # ngraph.native
 
+_This fork contains additional node bindings_
+
 C++ implementation of force-based layout from ngraph. This is equivalent to
 [ngraph.offline.layout](https://github.com/anvaka/ngraph.offline.layout).
 Unfortunately I don't have bindings to nodejs (yet).
