@@ -1,5 +1,5 @@
 {
-  "name": "node-ngraph.native",
+  "name": "ngraph.native",
   "version": "0.1.0",
   "description": "Node bindings for ngraph.native",
   "main": "ngraph.native.js",
