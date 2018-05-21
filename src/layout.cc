@@ -34,7 +34,7 @@ void Layout::loadPositionsFromArray(int *initialPositions) {
 void Layout::setDefaultBodiesPositions() {
   size_t maxBodyId = bodies.size();
   for (size_t i = 0; i < maxBodyId; ++i) {
-    bodies[i].setPos(Vector2(0,0))
+    bodies[i].setPos(Vector2(0,0));
     // Body *body = &(bodies[i]);
     // if (!body->positionInitialized()) {
     //   Vector2 initialPos(random.nextDouble() * log(maxBodyId) * 100,
