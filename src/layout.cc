@@ -34,23 +34,24 @@ void Layout::loadPositionsFromArray(int *initialPositions) {
 void Layout::setDefaultBodiesPositions() {
   size_t maxBodyId = bodies.size();
   for (size_t i = 0; i < maxBodyId; ++i) {
-    Body *body = &(bodies[i]);
-    if (!body->positionInitialized()) {
-      Vector2 initialPos(random.nextDouble() * log(maxBodyId) * 100,
-                         random.nextDouble() * log(maxBodyId) * 100);
-      bodies[i].setPos(initialPos);
-    }
-    Vector2 *sourcePos = &(body->pos);
-    // init neighbours position:
-    for (size_t j = 0; j < body->springs.size(); ++j) {
-      if (!bodies[body->springs[j]].positionInitialized()) {
-        Vector2 neighbourPosition(
-                                  sourcePos->x + random.next(settings.springLength) - settings.springLength/2,
-                                  sourcePos->y + random.next(settings.springLength) - settings.springLength/2
-                                  );
-        bodies[j].setPos(neighbourPosition);
-      }
-    }
+    bodies[i].setPos(Vector2(0,0))
+    // Body *body = &(bodies[i]);
+    // if (!body->positionInitialized()) {
+    //   Vector2 initialPos(random.nextDouble() * log(maxBodyId) * 100,
+    //                      random.nextDouble() * log(maxBodyId) * 100);
+    //   bodies[i].setPos(initialPos);
+    // }
+    // Vector2 *sourcePos = &(body->pos);
+    // // init neighbours position:
+    // for (size_t j = 0; j < body->springs.size(); ++j) {
+    //   if (!bodies[body->springs[j]].positionInitialized()) {
+    //     Vector2 neighbourPosition(
+    //                               sourcePos->x + random.next(settings.springLength) - settings.springLength/2,
+    //                               sourcePos->y + random.next(settings.springLength) - settings.springLength/2
+    //                               );
+    //     bodies[j].setPos(neighbourPosition);
+    //   }
+    // }
   }
 }
 
