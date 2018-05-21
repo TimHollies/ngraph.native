@@ -10,11 +10,11 @@ const run = (nodes, edges, iterations) => {
   const rawResult = Array.from(rawTArrayResult);
 
   const result = [];
-  for(let i=0; i<rawResult.length; i+=3) {
+  for(let i=0; i<nodes.length; i+=1) {
     result.push({
-      id: "n" + rawResult[i],
-      x: rawResult[i+1],
-      y: rawResult[i+2]
+      id: nodes[i],
+      x: rawResult[(i*3)+1],
+      y: rawResult[(i*3)+2]
     })
   }
 
