@@ -1,11 +1,11 @@
 {
-  "name": "ngraph.native",
+  "name": "@digihum/node-ngraph.native",
   "version": "0.1.0",
   "description": "Node bindings for ngraph.native",
   "main": "ngraph.native.js",
   "private": true,
   "dependencies": {
-    "bindings": "~1.2.1"
+    "bindings": "~1.3.0"
   },
   "scripts": {
     "test": "node test/main.js"
